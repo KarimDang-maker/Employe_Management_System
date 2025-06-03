@@ -14,14 +14,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
+@Service
+@RequiredArgsConstructor
 public class PosteService {
 
     private final PosteRepository posteRepository;
 
-    public PosteService(PosteRepository posteRepository) {
-        this.posteRepository = posteRepository;
-    }
+//    public PosteService(PosteRepository posteRepository) {
+//        this.posteRepository = posteRepository;
+//    }
 
     // Ajouter un nouveau poste en BD
     public Poste addPoste(Poste poste) {
