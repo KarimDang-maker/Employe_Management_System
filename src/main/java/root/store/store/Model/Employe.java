@@ -45,5 +45,4 @@ public class Employe {
     @ManyToOne
     @JoinColumn(name="departement")
     private Departement departement;
-
 }
