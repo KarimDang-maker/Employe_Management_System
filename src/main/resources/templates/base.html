@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <!-- Fragment avec paramètre optionnel -->
+    <th:block th:fragment="page_head(titrePage)">
+        <meta charset="UTF-8">
+        <title th:text="${'STORE - ' + titrePage}"></title>
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+        <link rel="stylesheet" th:href="@{/css/all.min.css}">
+    </th:block>
+</head>
+<body>
+<!-- Inclusion du header -->
+<div layout:fragment="header" th:replace="~{layouts/_header :: header}"></div>
+
+<div class="container mt-5" layout:fragment="content">
+    <!-- Content de chaque page -->
+</div>
+
+<!-- Inclusion du footer -->
+<div th:fragment="bas_de_page" class="mt-5">
+    <div layout:fragment="footer" th:replace="~{layouts/_footer :: footer}"></div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/all.min.js}"></script>
+</div>
+</body>
+</html>

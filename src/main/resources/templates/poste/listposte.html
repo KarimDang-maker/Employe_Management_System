@@ -1,0 +1,103 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>karim</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<head th:replace="~{base::page_head(titrePage='LISTE DES POSTES')}"></head>
+
+<body>
+<!-- Inclusion du header -->
+<div layout:fragment="header" th:replace="~{layouts/_header :: header}"></div>
+
+<!-- Content -->
+<div layout:fragment="content">
+    <div class="justify-content-center mt-5">
+        <div class="container">
+            <div class="justify-content-center m-5">
+                <hr>
+                <h2 class="text-center text-success">Liste des postes</h2>
+                <hr>
+                <!-- Message flash -->
+                <div th:if="${msg}" class="alert alert-primary alert-dismissible fade show">
+                    <span th:text="${msg}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <a class="btn btn-sm btn-primary mb-2" th:href="@{/poste/new}">Nouveau poste</a>
+                <table class="table table-hover table-bordered table-striped">
+                    <thead>
+                    <tr class="table-success">
+                        <th scope="col-1" class="text-center">N°</th>
+                        <th scope="col-4">Libellé du poste</th>
+                        <th scope="col-2" class="text-end">Salaire minimum</th>
+                        <th scope="col-2" class="text-center">Salaire maximum</th>
+                        <th scope="col-2" class="text-center">Liste des employés</th>
+                        <th scope="col-3" class="text-center">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p,iter : ${postes}">
+                        <td class="text-center" th:text="${iter.index + 1}"></td>
+                        <td class="text-start" th:text="${p.libellePoste}"></td>
+                        <td class="text-end" th:text="${#numbers.formatInteger(p.salaireMin, 3, 'WHITESPACE')}"></td>
+                        <td class="text-end" th:text="${#numbers.formatInteger(p.salaireMax, 3, 'WHITESPACE')}"></td>
+                        <td class="text-center">
+                            <a class="btn btn-primary btn-sm"
+                               th:href="@{/poste/employes/{id}(id=${p.id})}"
+                               title="Voir la liste des employés à ce poste">
+                                <i class="fa-solid fa-eye"></i> (<span th:text="${p.employes.size()}"></span>)
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-warning btn-sm"
+                               th:href="@{/poste/edit/{id}(id=${p.id})}"
+                               title="Modifier">
+                                <i class="fa-solid fa-pen-nib"></i>
+                            </a>
+                            <a class="btn btn-danger btn-sm"
+                               th:href="@{/poste/delete/{id}(id=${p.id})}"
+                               data-bs-toggle="modal"
+                               data-bs-target="'#modal' + ${p.id}"
+                               title="Supprimer">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+
+                            <!-- Modal de confirmation -->
+                            <div class="modal fade text-start" th:id="'modal' + ${p.id}" data-bs-backdrop="static">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Suppression d'un poste !</h5>
+                                            <button type="button" class="btn-close"
+                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Supprimer le poste de <span th:text="${p.libellePoste}"></span> ?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a class="btn btn-danger" th:href="@{/poste/delete/{id}(id=${p.id})}">Confirmer</a>
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Annuler</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

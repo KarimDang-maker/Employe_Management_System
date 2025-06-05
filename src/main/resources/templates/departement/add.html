@@ -1,0 +1,72 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--</body>-->
+<!--</html>-->
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<!-- Appel correct du fragment avec paramètre -->
+<head th:replace="~{base::page_head(titrePage='AJOUTER UN DEPARTEMENT')}">
+</head>
+<body>
+<!-- Inclusion du header -->
+<div layout:fragment="header" th:replace="~{layouts/_header :: header}"></div>
+
+<!-- Content -->
+<div layout:fragment="content">
+  <div class="justify-content-center mt-5">
+    <div class="container">
+      <form th:action="@{/departement/save}" method="post" th:object="${departement}">
+        <fieldset>
+          <legend>Ajouter un nouveau département</legend>
+          <hr>
+          <!-- Message flash -->
+          <div th:if="${msg}" class="alert alert-primary alert-dismissible fade show">
+            <span th:text="${msg}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          <a class="btn btn-sm btn-primary mb-2 fw-bolder" th:href="@{/departement}">
+            <i class="fa-solid fa-square-up-right"></i>
+            Retourner à la liste des départements
+          </a>
+          <div class="form-group">
+            <label class="col-sm-2 col-form-label" for="libelleDepartement">
+              Libellé du département
+            </label>
+            <input type="text" class="form-control" th:field="*{libelleDepartement}"
+                   name="libelleDepartement" id="libelleDepartement">
+            <small id="emailHelp" class="form-text text-muted">
+              Renseigner le nom du département
+            </small>
+            <div th:if="${#fields.hasErrors('libelleDepartement')}"
+                 th:errors="*{libelleDepartement}" class="text-danger">
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <button type="submit" class="btn btn-sm btn-success mr-2 fw-bolder">
+              <i class="fa-solid fa-floppy-disk"></i> Enregistrer
+            </button>
+            <button type="reset" class="btn btn-sm btn-secondary fw-bolder">
+              <i class="fa-solid fa-eject"></i> Annuler
+            </button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Inclusion du footer -->
+<div layout:fragment="bas_de_page" th:replace="~{base::bas_de_page}"></div>
+</body>
+</html>

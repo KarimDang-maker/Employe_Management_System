@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="border-top bg-light text-muted text-center mt-5 py-3" th:fragment="footer">
+    &copy; [[ ${#dates.format(#dates.createNow(), 'yyyy')} ]]
+    - Store application - Tous droits réservés
+</div>
+</body>
+</html>

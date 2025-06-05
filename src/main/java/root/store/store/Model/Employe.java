@@ -39,10 +39,10 @@ public class Employe {
     private Integer salaire;
 
     @ManyToOne
-    @JoinColumn(name="poste")
+    @JoinColumn(name= "templates/poste")
     private Poste poste;
 
     @ManyToOne
-    @JoinColumn(name="departement")
+    @JoinColumn(name= "templates/departement")
     private Departement departement;
 }

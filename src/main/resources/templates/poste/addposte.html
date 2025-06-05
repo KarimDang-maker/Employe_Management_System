@@ -1,0 +1,89 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<head th:replace="~{base::page_head(titrePage='AJOUTER UN POSTE')}"></head>
+
+<body>
+<!-- Inclusion du header -->
+<div layout:fragment="header" th:replace="~{layouts/_header :: header}"></div>
+
+<!-- Content -->
+<div layout:fragment="content">
+    <div class="justify-content-center mt-5">
+        <div class="container">
+            <form th:action="@{/poste/save}" method="post" th:object="${poste}">
+                <fieldset>
+                    <legend>Ajouter un nouveau poste</legend>
+                    <hr>
+                    <!-- Message flash -->
+                    <div th:if="${msg}" class="alert alert-primary alert-dismissible fade show">
+                        <span th:text="${msg}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <a class="btn btn-sm btn-primary mb-2 fw-bolder" th:href="@{/poste}">
+                        <i class="fa-solid fa-square-up-right"></i>
+                        Retourner à la liste des postes
+                    </a>
+                    <div class="form-group">
+                        <label class="col-sm-2 col-form-label">Poste</label>
+                        <select th:field="*{libellePoste}" name="libellePoste"
+                                id="libellePoste"
+                                th:classappend="${#fields.hasErrors('libellePoste')} ? 'is-invalid'" class="form-control">
+                            <option value="" disabled>Choisir un poste</option>
+                            <option th:each="type : ${types}" th:value="${type}"
+                                    th:text="${type}"></option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('libellePoste')}"
+                             th:errors="*{libellePoste}" class="text-danger"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label mt-4">Salaire minimum</label>
+                        <input type="number" class="form-control" th:field="*{salaireMin}"
+                               aria-describedby="prixProduit" placeholder="50000">
+                        <small id="emailHelp" class="form-text text-muted">
+                            Renseigner le salaire minimum du poste
+                        </small>
+                        <div th:if="${#fields.hasErrors('salaireMin')}"
+                             th:errors="*{salaireMin}" class="text-danger"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label mt-4">Salaire Maximum</label>
+                        <input type="number" class="form-control" th:field="*{salaireMax}"
+                               aria-describedby="prixProduit" placeholder="1000000">
+                        <small id="emailHelp" class="form-text text-muted">
+                            Renseigner le salaire maximum du poste
+                        </small>
+                        <div th:if="${#fields.hasErrors('salaireMax')}"
+                             th:errors="*{salaireMax}" class="text-danger"></div>
+                    </div>
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-sm btn-success mr-2 fw-bolder">
+                            <i class="fa-solid fa-floppy-disk"></i> Enregistrer
+                        </button>
+                        <button type="reset" class="btn btn-sm btn-secondary fw-bolder">
+                            <i class="fa-solid fa-eject"></i> Annuler
+                        </button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Inclusion du footer -->
+<div layout:fragment="bas_de_page" th:replace="~{base::bas_de_page}"></div>
+</body>
+</html>

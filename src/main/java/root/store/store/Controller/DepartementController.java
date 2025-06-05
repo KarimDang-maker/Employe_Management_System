@@ -102,8 +102,6 @@ public class DepartementController {
         return "departement/edit";
 
     }
-
-
     @PostMapping("/update/{id}")
     public String update(@PathVariable UUID id,
                          @Valid @ModelAttribute("departement") Departement departement,

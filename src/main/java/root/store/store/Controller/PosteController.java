@@ -33,15 +33,14 @@ public class PosteController {
     public String listPostes(Model model) {
         List<Poste> postes = posteService.getAllPostes();
         model.addAttribute("postes", postes);
-        return "poste/listposte";
+        return "poste/listposte"; // Removed "templates/" prefix
     }
-
     // Créer un nouveau poste
     @GetMapping("/new")
-    public String addPoste(Model model) {
-        model.addAttribute("poste", new Poste());
+    public String showAddPosteForm(Model model) {
+        model.addAttribute("poste", new Poste());  // Changed attribute name
         model.addAttribute("types", TypePoste.values());
-        return "poste/addposte";
+        return "poste/addposte";  // Removed "templates/" prefix
     }
 
     @PostMapping("/save")
@@ -87,7 +86,7 @@ public class PosteController {
         List<EmployeDTO> employesDTO = employeService.getAllEmployeesByPoste(id);
 
     // Transmission des variables au template
-        model.addAttribute("poste", poste.getLibellePoste());
+        model.addAttribute("templates/poste", poste.getLibellePoste());
         model.addAttribute("employes", employesDTO);
     // Affichage du template
         return "poste/listeemployeposte";
@@ -119,6 +118,8 @@ public class PosteController {
 
         // On teste si les données saisies dans le formulaire sont valides
         if (bindingResult.hasErrors()) {
+            model.addAttribute("poste", poste);
+            model.addAttribute("types", TypePoste.values());
             return "poste/editposte"; // Retourner à la vue avec les erreurs
         }
         try {
@@ -135,9 +136,10 @@ public class PosteController {
             return "redirect:/poste";
 
         } catch (IllegalArgumentException e) {
-            bindingResult.rejectValue("libellePoste", null, e.getMessage());
-            return "poste/editposte";
-        }
+        bindingResult.rejectValue("libellePoste", null, e.getMessage());
+        model.addAttribute("poste", poste);
+        return "poste/editposte";
+    }
     }
 
         // Supprimer un poste de la BD
