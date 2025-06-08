@@ -1,10 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
 
+<!--</body>-->
+<!--</html>-->
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<head>
+    <title>Détails du Poste</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2>Détails du Poste</h2>
+            </div>
+
+            <div class="card-body">
+                <!-- Message flash -->
+                <div th:if="${msg}" class="alert alert-success alert-dismissible fade show">
+                    <span th:text="${msg}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <a th:href="@{/poste}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Retour
+                        </a>
+                        <a th:href="@{'/poste/edit/' + ${poste.id}}" class="btn btn-warning ms-2">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <a th:href="@{'/poste/employes/' + ${poste.id}}" class="btn btn-info me-2">
+                            <i class="fas fa-users"></i> Voir les employés
+                        </a>
+                        <a th:href="@{'/poste/delete/' + ${poste.id}}"
+                           class="btn btn-danger"
+                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce poste?');">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">ID:</dt>
+                            <dd class="col-sm-8" th:text="${poste.id}"></dd>
+
+                            <dt class="col-sm-4">Libellé:</dt>
+                            <dd class="col-sm-8" th:text="${poste.libellePoste}"></dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Salaire Min:</dt>
+                            <dd class="col-sm-8" th:text="${#numbers.formatCurrency(poste.salaireMin)}"></dd>
+
+                            <dt class="col-sm-4">Salaire Max:</dt>
+                            <dd class="col-sm-8" th:text="${#numbers.formatCurrency(poste.salaireMax)}"></dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h4>Description</h4>
+                    <p th:text="${poste.description != null} ? ${poste.description} : 'Aucune description disponible'"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

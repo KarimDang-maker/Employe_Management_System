@@ -34,6 +34,8 @@ public class DepartementController {
     /* Créer un nouveau departement: la création et
     la modification d'une entité aura toujours 2 méthodes
     (une avec GetMapping et l'autre avec PostMapping */
+
+
     @GetMapping("/new")
     public String add(Model model) {
         model.addAttribute("departement", new Departement());

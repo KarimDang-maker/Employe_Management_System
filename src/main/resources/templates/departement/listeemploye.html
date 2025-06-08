@@ -1,10 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
 
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<!-- Appel correct du fragment avec paramètre -->
+<head th:replace="~{base::page_head(titrePage='LISTE EMPLOYE AU DEPARTEMENT')}"></head>
+
+<body>
+<!-- Inclusion du header -->
+<div layout:fragment="header" th:replace="~{layouts/_header :: header}"></div>
+
+<!-- Content -->
+<div layout:fragment="content">
+    <div class="justify-content-center mt-5">
+        <div class="container">
+            <div class="justify-content-center m-5">
+                <hr>
+                <h2 class="text-center text-success">
+                    Liste des employés au département de [[${departement}]]
+                </h2>
+                <hr>
+                <div th:if="${msg}" class="alert alert-success text-center"
+                     th:text="${msg}">
+                </div>
+
+                <table class="table table-hover table-bordered table-striped">
+                    <thead>
+                    <tr class="table-success">
+                        <th scope="col-1" class="text-center">N°</th>
+                        <th scope="col-4">Nom</th>
+                        <th scope="col-2" class="text-end">Email</th>
+                        <th scope="col-2" class="text-center">Ancienneté</th>
+                        <th scope="col-2" class="text-center">Salaire</th>
+                        <th scope="col-2" class="text-center">Poste</th>
+                        <th scope="col-3" class="text-center">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="e,iter: ${employes}">
+                        <tr>
+                            <td class="text-center" th:text="${iter.index + 1}"></td>
+                            <td class="text-start" th:text="${e.nom}"></td>
+                            <td class="text-start" th:text="${e.email}"></td>
+                            <td class="text-end" th:text="${e.anciennete}"></td>
+                            <td class="text-end"
+                                th:text="${#numbers.formatInteger(e.salaire, 3, 'WHITESPACE')} FCFA">
+                            </td>
+                            <td class="text-start" th:text="${e.poste}"></td>
+                            <td class="text-center">
+                                <a class="btn btn-warning btn-sm" href="#" title="Modifier">
+                                    <i class="fa-solid fa-pen-nib"></i>
+                                </a>
+                                <a class="btn btn-danger btn-sm" href="#">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Inclusion du footer -->
+<div layout:fragment="footer" th:replace="~{layouts/_footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
