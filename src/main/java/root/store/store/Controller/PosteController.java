@@ -108,54 +108,59 @@ public class PosteController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable UUID id,
-                         @Valid @ModelAttribute("poste") Poste poste,
-                         BindingResult bindingResult,
-                         Model model,
-                         RedirectAttributes ra) {
+    public String update(
+            @PathVariable UUID id,
+            @Valid @ModelAttribute("poste") Poste poste,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes ra) {
 
         model.addAttribute("types", TypePoste.values());
 
-        // On teste si les données saisies dans le formulaire sont valides
         if (bindingResult.hasErrors()) {
             model.addAttribute("poste", poste);
             model.addAttribute("types", TypePoste.values());
-            return "poste/editposte"; // Retourner à la vue avec les erreurs
+            return "poste/editposte";
         }
-        try {
 
+        try {
             posteService.updatePoste(id, poste);
-            // Message flash
-            String msg = "Le poste " + poste.getLibellePoste() +
-                    " a été mis à jour avec succès !";
+
+            String msg = "Le poste " + poste.getLibellePoste() + " a été mis à jour avec succès !";
             ra.addFlashAttribute("msg", msg);
 
-            /** Après la modification d'un poste on se redirige
-             vers la page des listes des postes */
+            return "redirect:/poste";
 
+        } catch (EntityNotFoundException e) {
+            // Si le poste n'existe pas, on redirige avec un message d'erreur
+            ra.addFlashAttribute("error", e.getMessage());
             return "redirect:/poste";
 
         } catch (IllegalArgumentException e) {
-        bindingResult.rejectValue("libellePoste", null, e.getMessage());
-        model.addAttribute("poste", poste);
-        return "poste/editposte";
+            // Si une autre validation métier échoue (ex : libellé dupliqué)
+            bindingResult.rejectValue("libellePoste", null, e.getMessage());
+            model.addAttribute("poste", poste);
+            return "poste/editposte";
+        }
     }
-    }
-
         // Supprimer un poste de la BD
 
-        @GetMapping("/delete/{id}")
-
-        public String delete(@PathVariable UUID id, Model model, RedirectAttributes ra)
-        {
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable UUID id, Model model, RedirectAttributes ra) {
+        try {
             posteService.deletePoste(id);
 
-            // Message flash
+            // Message flash en cas de succès
             String msg = "Le poste a été supprimé avec succès !";
             ra.addFlashAttribute("msg", msg);
 
-            return "redirect:/poste";
+        } catch (EntityNotFoundException e) {
+            // Message flash en cas d'erreur
+            ra.addFlashAttribute("error", e.getMessage());
         }
+
+        return "redirect:/poste";
+    }
 }
 
 

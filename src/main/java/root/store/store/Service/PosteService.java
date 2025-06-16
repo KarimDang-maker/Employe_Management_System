@@ -1,12 +1,8 @@
 package root.store.store.Service;
 
-
-import root.store.store.DTO.EmployeDTO;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import root.store.store.Model.Poste;
-import root.store.store.Model.TypePoste;
 import org.springframework.stereotype.Service;
 import root.store.store.Repository.PosteRepository;
 
@@ -20,19 +16,14 @@ public class PosteService {
 
     private final PosteRepository posteRepository;
 
-//    public PosteService(PosteRepository posteRepository) {
-//        this.posteRepository = posteRepository;
-//    }
-
     // Ajouter un nouveau poste en BD
     public Poste addPoste(Poste poste) {
-    // Vérifie si le libellé existe déjà
+// Vérifie si le libellé existe déjà
         if (posteRepository.existsDistinctByLibellePoste(poste.getLibellePoste())) {
-            throw new IllegalArgumentException("Ce libellé existe déjà.");
+            throw new IllegalArgumentException("Ce poste existe déjà.");
         }
         return posteRepository.save(poste);
     }
-
 
     // Recupérer la liste de tous les postes qui existent dans la BD
     public List<Poste> getAllPostes() {
@@ -46,24 +37,24 @@ public class PosteService {
 
     // Modifier les informations sur un poste (existingPoste) dejà existant en BD
     public Poste updatePoste(UUID id, Poste updatedPoste) {
-        return posteRepository.findById(id).map(
-                existingPoste -> {
+        return posteRepository.findById(id)
+                .map(existingPoste -> {
                     existingPoste.setLibellePoste(updatedPoste.getLibellePoste());
                     existingPoste.setSalaireMax(updatedPoste.getSalaireMax());
                     existingPoste.setSalaireMin(updatedPoste.getSalaireMin());
                     return posteRepository.save(existingPoste);
-                }
-        ).orElseThrow(() -> new RuntimeException("Poste non trouvé !"));
+                })
+                .orElseThrow(() -> new EntityNotFoundException("Poste non trouvé avec l'ID : " + id));
     }
 
     // Supprimer de la BD un poste par son ID
     public void deletePoste(UUID id) {
-// Si le poste a supprimer n'existe pas il faut afficher un message
+
+    // Si le poste a supprimer n'existe pas il faut afficher un message
+
         if (!posteRepository.existsById(id)) {
             throw new EntityNotFoundException("Le poste avec id " + id + " n'existe pas !");
         }
         posteRepository.deleteById(id);
-
     }
-
 }

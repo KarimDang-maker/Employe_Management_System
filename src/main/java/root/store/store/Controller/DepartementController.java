@@ -24,129 +24,91 @@ public class DepartementController {
     private final DepartementService departementService;
     private final EmployeService employeService;
 
-    // Liste des departements
+    // Liste des départements
     @GetMapping
     public String getAllDepartements(Model model) {
-        model.addAttribute("departemnts", departementService.allDepartements());
+        model.addAttribute("departemnts", departementService.getAllDepartements());
         return "departement/list";
     }
 
-    /* Créer un nouveau departement: la création et
-    la modification d'une entité aura toujours 2 méthodes
-    (une avec GetMapping et l'autre avec PostMapping */
-
-
+    // Afficher le formulaire de création d’un département
     @GetMapping("/new")
     public String add(Model model) {
         model.addAttribute("departement", new Departement());
         return "departement/add";
     }
 
+    // Enregistrer un nouveau département
     @PostMapping("/save")
     public String save(@Valid @ModelAttribute("departement") Departement departement,
                        BindingResult bindingResult,
                        Model model,
                        RedirectAttributes ra) {
-        // On teste si les données saisies dans le formulaire sont valides
-
-
         if (bindingResult.hasErrors()) {
-            // Retourner à la vue avec les erreurs
             return "departement/add";
         }
+
         try {
-
             departementService.addDepartement(departement);
-            // Message flash
-            String msg = "Le département " + departement.getLibelleDepartement()
-                    + " a été créé avec succès !";
+            String msg = "Le département " + departement.getLibelleDepartement() + " a été créé avec succès.";
             ra.addFlashAttribute("msg", msg);
-
-    /* Après la création d'un nouveau département on se redirige
-        vers la page des listes des départements */
             return "redirect:/departement";
         } catch (IllegalArgumentException e) {
             bindingResult.rejectValue("libelleDepartement", null, e.getMessage());
             return "departement/add";
         }
-
     }
 
-    // Pour voir la liste des employés pour le departement indiqué
+    // Liste des employés d’un département
     @GetMapping("/employes/{id}")
     public String listeEmployesByPoste(@PathVariable UUID id, Model model) {
         Departement departement = departementService.getDepartementById(id)
-                .orElseThrow(()
-                        -> new EntityNotFoundException("Département non existant"));
+                .orElseThrow(() -> new EntityNotFoundException("Département non existant"));
 
-        // Liste des employes du departement dont l'id est {id}
         List<EmployeDTO> employesDTO = employeService.getAllEmployeesByDepartement(id);
-
-        // Transmission des variables au template
         model.addAttribute("departement", departement.getLibelleDepartement());
         model.addAttribute("employes", employesDTO);
-        // Affichage du template
-        return "departement/listemploye";
 
+        return "departement/listemploye";
     }
 
-    /* Modifier les informations d'un departement: la création et
-    la modification d'une entité aura toujours 2 méthodes
-    (une avec GetMapping et l'autre avec PostMapping */
+    // Afficher le formulaire de modification d’un département
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable UUID id, Model model, RedirectAttributes ra) {
-        // On recupère le departement à modifier
         Departement departement = departementService.getDepartementById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Poste non trouvé"));
-
+                .orElseThrow(() -> new EntityNotFoundException("Département non trouvé"));
         model.addAttribute("departement", departement);
-        // Appel de la page qui affichera les informations sur le departement à modifier
         return "departement/edit";
-
     }
+
+    // Mettre à jour un département existant
     @PostMapping("/update/{id}")
     public String update(@PathVariable UUID id,
                          @Valid @ModelAttribute("departement") Departement departement,
                          BindingResult bindingResult,
                          Model model,
                          RedirectAttributes ra) {
-        // On teste si les données saisies dans le formulaire sont valides
         if (bindingResult.hasErrors()) {
-            // Retourner à la vue avec les erreurs
             return "departement/edit";
         }
 
         try {
-
             departementService.updateDepartement(id, departement);
-            // Message flash
-            String msg = "Le département " + departement.getLibelleDepartement()
-                    + " a été mis à jour avec succès !";
+            String msg = "Le département " + departement.getLibelleDepartement() + " a été modifié avec succès.";
             ra.addFlashAttribute("msg", msg);
-
-        /* Après la modification d'un poste on se redirige vers
-        la page des listes des departements */
             return "redirect:/departement";
-
-
         } catch (IllegalArgumentException e) {
             bindingResult.rejectValue("libelleDepartement", null, e.getMessage());
             return "departement/edit";
         }
-
     }
 
-    // Supprimer un departement de la BD
+    // Supprimer un département
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable UUID id, Model model, RedirectAttributes ra) {
-        // Suppression du departement dont l'id est {id}
         departementService.deleteDepartement(id);
-
-        // Message flash
         String msg = "Le département a été supprimé avec succès !";
         ra.addFlashAttribute("msg", msg);
-
-        // Redirection vers la page affichant les listes des departement
         return "redirect:/departement";
     }
 }

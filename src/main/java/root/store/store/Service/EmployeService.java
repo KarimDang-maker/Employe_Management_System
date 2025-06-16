@@ -98,9 +98,11 @@ public class EmployeService {
                 Period.between(employe.getDateEmbauche(), LocalDate.now()).getYears(),
                 employe.getSalaire(),
                 employe.getPoste().getLibellePoste(),
-                employe.getDepartement().getLibelleDepartement()
+                employe.getDepartement().getLibelleDepartement(),
+                employe.getDateEmbauche()  // <-- ajouté ici
         );
     }
+
 
     // Methode 2 de conversion d'une entité en entiteDTO
 /**

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+<head th:replace="~{base::page_head(titrePage='EMPLOYE UN POSTE')}">
+</head>
+<body>
+<!-- Inclusion du header -->
+<div layout:fragment="header" th:replace="~{layouts/_header :: header}"></div>
+
+<!-- Content -->
+<div layout:fragment="content">
+  <div class="justify-content-center mt-5">
+    <div class="container">
+      <form th:action="@{/employe/save}" th:object="${employe}" method="post">
+        <fieldset>
+          <legend>Ajouter un nouvel employé</legend>
+          <hr>
+          <!-- Message flash -->
+          <div th:if="${msg}" class="alert alert-primary alert-dismissible fade show">
+            <span th:text="${msg}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          <a class="btn btn-sm btn-primary mb-2 fw-bolder" th:href="@{/employe}">
+            <i class="fa-solid fa-square-up-right"></i> Retourner à la liste des employés
+          </a>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label class="col-form-label">Nom:</label>
+              <input type="text" th:field="*{nom}" class="form-control"
+                     placeholder="EX: TUKO BENEDICTO PACIFO" required>
+              <small class="form-text text-muted">
+                Renseigner le nom de l'employé
+              </small>
+              <div th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"
+                   class="text-danger"></div>
+            </div>
+            <div class="form-group col-md-6">
+              <label class="col-form-label">Email:</label>
+              <input type="email" th:field="*{email}" class="form-control"
+                     placeholder="EX: tukobp@caramail.com" required>
+              <small class="form-text text-muted">
+                Renseigner l'email de l'employé
+              </small>
+              <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                   class="text-danger"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label class="col-form-label">Date d'embauche:</label>
+              <input type="date" th:field="*{dateEmbauche}" class="form-control" required>
+              <small class="form-text text-muted">
+                Renseigner la date de recrutement
+              </small>
+              <div th:if="${#fields.hasErrors('dateEmbauche')}"
+                   th:errors="*{dateEmbauche}" class="text-danger"></div>
+            </div>
+            <div class="form-group col-md-6">
+              <label class="form-label mt-4">Salaire</label>
+              <input type="number" class="form-control" th:field="*{salaire}"
+                     aria-describedby="prixProduit" placeholder="50000">
+              <small class="form-text text-muted">
+                Salaire que touchera l'employé
+              </small>
+              <div th:if="${#fields.hasErrors('salaire')}"
+                   th:errors="*{salaire}" class="text-danger"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label class="col-form-label">Poste:</label>
+              <select th:field="*{poste}" id="poste"
+                      th:classappend="${#fields.hasErrors('poste')} ? 'is-invalid' : ''"
+                      class="form-control">
+                <option value="" disabled>Choisir un poste</option>
+                <option th:each="poste : ${postes}" th:value="${poste.id}"
+                        th:text="${poste.libellePoste}"></option>
+              </select>
+              <small class="form-text text-muted">
+                Poste qu'occupera l'employé
+              </small>
+              <div th:if="${#fields.hasErrors('poste')}"
+                   th:errors="*{poste}" class="text-danger"></div>
+            </div>
+            <div class="form-group col-md-6">
+              <label class="col-form-label">Département:</label>
+              <select th:field="*{departement}" id="departement"
+                      th:classappend="${#fields.hasErrors('departement')} ? 'is-invalid' : ''"
+                      class="form-control">
+                <option value="" disabled>Choisir un département</option>
+                <option th:each="departement : ${departements}"
+                        th:value="${departement.id}"
+                        th:text="${departement.libelleDepartement}">
+                </option>
+              </select>
+              <small class="form-text text-muted">
+                Département dans lequel l'employé sera affecté
+              </small>
+              <div th:if="${#fields.hasErrors('departement')}"
+                   th:errors="*{departement}" class="text-danger"></div>
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <button type="submit" class="btn btn-sm btn-success mr-2 fw-bolder">
+              <i class="fa-solid fa-floppy-disk"></i> Enregistrer
+            </button>
+            <a class="btn btn-sm btn-secondary fw-bolder" th:href="@{/employe/list}">
+              <i class="fa-solid fa-eject"></i> Annuler
+            </a>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Inclusion du footer -->
+<div layout:fragment="bas_de_page" th:replace="~{base::bas_de_page}"></div>
+</body>
+</html>

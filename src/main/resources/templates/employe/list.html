@@ -1,0 +1,119 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<!-- Appel correct du fragment avec paramètre -->
+<head th:replace="~{base::page_head(titrePage='LISTE DES EMPLOYES')}"></head>
+
+<body>
+<!-- Inclusion du header -->
+<div layout:fragment="header" th:replace="~{layouts/_header :: header}"></div>
+
+<!-- Content -->
+<div layout:fragment="content">
+  <div class="justify-content-center mt-5">
+    <div class="container">
+      <div class="justify-content-center m-5">
+        <hr>
+        <h2 class="text-center text-success">Liste des employes</h2>
+        <hr>
+        <!-- Message flash -->
+        <div th:if="${msg}" class="alert alert-primary alert-dismissible fade show">
+          <span th:text="${msg}"></span>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <a class="btn btn-sm btn-primary mb-2" th:href="@{/employe/new}">
+          Nouvel employes
+        </a>
+        <table class="table table-hover table-bordered table-striped">
+          <thead>
+          <tr class="table-success">
+            <th scope="col-1" class="text-center">N°</th>
+            <th scope="col-4">Nom</th>
+            <th scope="col-2" class="text-center">Email</th>
+            <th scope="col-2" class="text-center">Ancienneté</th>
+            <th scope="col-2" class="text-center">Salaire</th>
+            <th scope="col-2" class="text-center">Poste occupé</th>
+            <th scope="col-2" class="text-center">Département</th>
+            <th scope="col-3" class="text-center">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <th:block scope="row" th:each="e,iter: ${employes}">
+            <tr>
+              <td class="text-center" th:text="${iter.index + 1}"></td>
+              <td class="text-start" th:text="${e.nom}"></td>
+              <td class="text-start" th:text="${e.email}"></td>
+              <!-- premiere methode de concatenation -->
+              <td class="text-end" th:text="${e.anciennete} + ' an(s)'"></td>
+              <!-- deuxieme methode de concatenation -->
+              <td class="text-end"
+                  th:text="|${#numbers.formatInteger(e.salaire, 3, 'WHITESPACE')} FCFA|">
+              </td>
+              <td class="text-center" th:text="${e.poste}"></td>
+              <td class="text-center" th:text="${e.departement}"></td>
+              <td class="text-center">
+                <a class="btn btn-warning btn-sm"
+                   th:href="@{/employe/edit/{id}(id=${e.id})}"
+                   title="Modifier l'employé">
+                  <i class="fa-solid fa-pen-nib"></i>
+                </a>
+                <a class="btn btn-danger btn-sm"
+                   th:href="@{/employe/delete/{id}(id=${e.id})}"
+                   data-bs-toggle="modal"
+                   th:data-bs-target="'#modal' + ${e.id}">
+                  <i class="fa-solid fa-trash"></i>
+                </a>
+                <div class="modal fade text-start" th:id="'modal' + ${e.id}"
+                     data-bs-backdrop="static">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Suppression d'un employe !</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close">
+                          <span aria-hidden="true"></span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>Supprimer l'employé [[${e.nom}]] ?</p>
+                      </div>
+                      <div class="modal-footer">
+                        <a class="btn btn-danger"
+                           th:href="@{/employe/delete/{id}(id=${e.id})}">
+                          Oui, Supprimer
+                        </a>
+                        <button type="button" class="btn btn-success"
+                                data-bs-dismiss="modal">
+                          Non, Annuler
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </th:block>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Inclusion du footer -->
+<div th:replace="~{base::bas_de_page}"></div>
+</body>
+</html>

@@ -15,5 +15,6 @@ public record EmployeDTO(
         Integer anciennete,
         Integer salaire,
         TypePoste poste,
-        String departement
+        String departement,
+        LocalDate dateEmbauche  // ajouté ici
 ){}

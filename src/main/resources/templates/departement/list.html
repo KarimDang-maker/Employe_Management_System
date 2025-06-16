@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{base}">
 
-<head th:replace="~{base::page_head(titrePage='LISTE DES DÉPARTEMENTS')}"></head>
+<!-- Appel correct du fragment avec paramètre -->
+<head th:replace="~{base::page_head(titrePage='LISTE DES DEPARTEMENTS')}"></head>
 
 <body>
 <!-- Inclusion du header -->
@@ -17,25 +18,28 @@
         <hr>
         <h2 class="text-center text-success">Liste des départements</h2>
         <hr>
+
         <!-- Message flash -->
         <div th:if="${msg}" class="alert alert-primary alert-dismissible fade show">
           <span th:text="${msg}"></span>
           <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+
         <a class="btn btn-sm btn-primary mb-2" th:href="@{/departement/new}">
           Nouveau département
         </a>
+
         <table class="table table-hover table-bordered table-striped">
           <thead>
           <tr class="table-success">
-            <th scope="col-1" class="text-center">N°</th>
-            <th scope="col-4">Libellé du département</th>
-            <th scope="col-2" class="text-center">Liste des employés</th>
-            <th scope="col-3" class="text-center">Actions</th>
+            <th scope="col" class="text-center">N°</th>
+            <th scope="col">Libellé du département</th>
+            <th scope="col" class="text-center">Liste de employés</th>
+            <th scope="col" class="text-center">Action</th>
           </tr>
           </thead>
           <tbody>
-          <th:block scope="row" th:each="d,iter: ${departements}">
+          <th:block th:each="d, iter : ${departemnts}">
             <tr>
               <td class="text-center" th:text="${iter.index + 1}"></td>
               <td class="text-start" th:text="${d.libelleDepartement}"></td>
@@ -44,7 +48,7 @@
                    th:href="@{/departement/employes/{id}(id=${d.id})}"
                    title="Voir la liste des employés dans ce département">
                   <i class="fa-solid fa-eye"></i>
-                  (<span th:text="${d.employes.size()}"></span>)
+                  (<span th:text="${d.employes != null ? d.employes.size() : 0}"></span>)
                 </a>
               </td>
               <td class="text-center">
@@ -53,14 +57,14 @@
                    th:title="'Modifier le département ' + ${d.libelleDepartement} + ' ?'">
                   <i class="fa-solid fa-pen-nib"></i>
                 </a>
+
                 <a class="btn btn-danger btn-sm" href="#" data-bs-toggle="modal"
                    th:data-bs-target="'#modal' + ${d.id}">
                   <i class="fa-solid fa-trash"></i>
                 </a>
 
                 <!-- Modal de suppression -->
-                <div class="modal fade text-start" th:id="'modal' + ${d.id}"
-                     data-bs-backdrop="static">
+                <div class="modal fade text-start" th:id="'modal' + ${d.id}" data-bs-backdrop="static">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -77,7 +81,7 @@
                           Oui, Supprimer
                         </a>
                         <button type="button" class="btn btn-success" data-bs-dismiss="modal">
-                          Non, Annuler
+                          Annuler
                         </button>
                       </div>
                     </div>
